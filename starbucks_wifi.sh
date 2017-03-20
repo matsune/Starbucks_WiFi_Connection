@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 TARGET_WIFI="at_STARBUCKS_Wi2"
 
@@ -8,14 +8,14 @@ function connect_STARBUCKS_WiFi() {
 	WIFI_DEV_NAME=$(networksetup -listallhardwareports | grep -w Wi-Fi -A1 | awk '/^Device:/{ print $2 }')
 	if [ -z "${WIFI_DEV_NAME}" ]; then
 	  echo "Wi-Fi device not found!"
-	  exit 2
+	  return
 	fi
 
 	# スタバWi-Fiと繋がっているか
 	COUNT=`networksetup -getairportnetwork ${WIFI_DEV_NAME} | grep -c ${TARGET_WIFI}`
 	if [ $COUNT -eq 1 ]; then
 		echo "Wifi is already connecting ${TARGET_WIFI}."
-		exit 0
+		return
 	fi
 
 	# Wi-Fiの電源が入っていなければONにする
@@ -34,11 +34,11 @@ function connect_STARBUCKS_WiFi() {
 	# スタバWi-Fiがあるか
 	AIRPORT_CMD='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 	AIRPORT_COUNT=`${AIRPORT_CMD} -s ${TARGET_WIFI} | grep -c ${TARGET_WIFI}`
-	if [$COUNT -lt 1 ]; then
+	if [ $AIRPORT_COUNT -lt 1 ]; then
 		echo "${TARGET_WIFI} not found."
 		exit 4
 	else
-		echo "${TARGET_WIFI} found and connecting..."
+		echo "${TARGET_WIFI} found."
 	fi
 
 	# 接続リトライ回数/リトライ間隔秒数
