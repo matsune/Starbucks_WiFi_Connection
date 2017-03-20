@@ -32,7 +32,8 @@ function connect_STARBUCKS_WiFi() {
 	fi
 
 	# スタバWi-Fiがあるか
-	AIRPORT_COUNT=`airport -s ${TARGET_WIFI} | grep -c ${TARGET_WIFI}`
+	AIRPORT_CMD='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
+	AIRPORT_COUNT=`${AIRPORT_CMD} -s ${TARGET_WIFI} | grep -c ${TARGET_WIFI}`
 	if [$COUNT -lt 1 ]; then
 		echo "${TARGET_WIFI} not found."
 		exit 4
